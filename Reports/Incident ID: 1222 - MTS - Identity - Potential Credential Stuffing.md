@@ -14,12 +14,12 @@ Based on the evidence, no successful logins had occurred, and there was no evide
 
 ## WHO, WHAT, WHEN, WHERE and WHY
 
-Who 
+### Who 
 
 The IP Address 147[.]124[.]219[.]77 was observed trying to access multiple accounts as trying to brute force the account "ADMINISTRATOR" on "MTS-ContractorPC1". 
 	
 	
-What 
+### What 
 
 On 2026-01-26 21:46:47 PM (UTC) an alert was generated for potential credential stuffing. Reviewing SecurityEvent logs shows that the IP Address (147[.]124[.]219[.]77) was seen attempting to access multiple accounts on the computer "MTS-ContractorPC1" via a network logon (LogonType 3). Based on the available network logs the attacker is attempting to connect to "MTS-ContractorPC1" via port 3389, which is the port associated with RDP (Figure 2). 
 
