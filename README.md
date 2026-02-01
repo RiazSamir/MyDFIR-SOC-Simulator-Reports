@@ -15,3 +15,4 @@ This repository contains structured investigation reports based on simulated sec
 
 ## Reports
 
+[Incident ID: 1222 - MTS - Identity - Potential Credential Stuffing](https://github.com/RiazSamir/MyDFIR-SOC-Simulator-Reports/blob/main/Reports/Incident%20ID%3A%201222%20-%20MTS%20-%20Identity%20-%20Potential%20Credential%20Stuffing.md)
