@@ -3,7 +3,7 @@
 ## Findings
 
 IOC IP Address:
-- 147[.]124[.]219[.]77 - United States Carrollton Majestic Hosting Solutions LLC
+147[.]124[.]219[.]77 - United States Carrollton Majestic Hosting Solutions LLC
 
 ## Investigation Summary 
 
