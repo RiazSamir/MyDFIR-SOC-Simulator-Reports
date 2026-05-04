@@ -173,6 +173,36 @@ The exact motive is unknown; however, based on the observed techniques — crede
 
 
 <p align="center">
-  <img alt="Figure 11" src="" />
+  <img width="731" height="580" alt="image" src="https://github.com/user-attachments/assets/38127afa-4ab0-4fc4-a014-78e691e0c24d" />
 </p>
 <p align="center"><b>Figure 11: Successful network logon recorded on mts-contractorpc1 using the local administrator account, originating from mts-dc.</b></p>
+
+
+<p align="center">
+  <img width="370" height="1179" alt="image" src="https://github.com/user-attachments/assets/1a0258e4-81c7-4b80-8fa7-f259c550f12b" />
+</p>
+<p align="center"><b>Figure 12: Private IP address of mts-dc confirmed as the source of the lateral movement logon to mts-contractorpc1.</b></p>
+
+
+<p align="center">
+  <img width="729" height="205" alt="image" src="https://github.com/user-attachments/assets/f0de8a14-9854-419a-9e7e-78eb6787a464" />
+</p>
+<p align="center"><b>Figure 13: Backdoor account "geshli" created and added to the Administrators group and Remote Desktop Users.</b></p>
+
+
+<p align="center">
+  <img width="1664" height="845" alt="image" src="https://github.com/user-attachments/assets/bdb560d0-7b37-4070-b613-53e9d0604bd0" />
+</p>
+<p align="center"><b>Figure 14: Malicious .png payload files observed in logs, flagged by VirusTotal and linked to wmiex.exe in the SysWOW64 directory.</b></p>
+
+
+<p align="center">
+  <img width="914" height="343" alt="image" src="https://github.com/user-attachments/assets/35ba4cde-1bc9-4502-9d56-8110289a5701" />
+</p>
+<p align="center"><b>Figure 15: wmiex.exe observed establishing a connection to oo[.]beahh[.]com.</b></p>
+
+
+<p align="center">
+  <img width="1389" height="445" alt="image" src="https://github.com/user-attachments/assets/b18b8e76-34ea-488f-892f-4ebf4f946db8" />
+</p>
+<p align="center"><b>Figure 16: KQL query confirming no other devices in the environment had made connections to oo[.]beahh[.]com at the time of investigation.</b></p>
