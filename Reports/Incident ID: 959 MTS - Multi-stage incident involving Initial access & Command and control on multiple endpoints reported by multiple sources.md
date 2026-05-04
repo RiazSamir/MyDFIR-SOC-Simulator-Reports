@@ -41,7 +41,7 @@ An unknown external threat actor accessed multiple accounts and systems using Pr
 - **2025-12-23 15:18 PM (UTC)** — An alert was generated for an Anonymous IP Address Sign-In associated with the user Zach Balrog, sourcing from IP `185[.]98[.]171[.]250`. During this time, Zach Balrog's account was used to sign into the Azure Portal. No brute force activity was observed prior to the successful logon, indicating credential stuffing or prior credential theft. The IP address is associated with Proton VPN, suggesting the use of a VPN or proxy to mask the attacker's true origin *(Figure 1)*.
 - **2025-12-23 15:21 PM (UTC)** — A successful RDP session was initiated from the same IP address `185[.]98[.]171[.]250` onto the device "Desktop-1" using the account "soc-administrator". No malicious activity was observed on Desktop-1 at the time of investigation *(Figure 2)*.
 - **2025-12-23 15:28 PM (UTC)** — A related IP address `185[.]98[.]171[.]249`, also associated with Proton VPN and sourcing from Canada, successfully SSH'd onto the device "mts-web" using the root account *(Figure 3)*. On **2025-12-23 15:35 PM (UTC)**, the root account was observed performing reconnaissance activity, including reviewing OS information, reviewing auth.log, listing running processes, and searching for files named "passwords". A new user account named "newuser" was created with sudo privileges. At the time of investigation, this account had not been accessed *(Figure 5)*.
-- **2025-12-23 15:35 PM (UTC)** — A wget request was made from mts-web to IP `182[.]121[.]245[.]103` over port 46094, retrieving a shell script named `bin.sh`, stored at `/root/bin.sh`. A VirusTotal lookup returned 47 vendor detections, classifying the file under the **Mozi** malware family — a botnet capable of providing an attacker with remote control of an infected device. The file was granted execute permissions via chmod; however, no execution of the script was observed at the time of investigation based on available evidence. The file was not observed on any other device *(Figure 6)*.
+- **2025-12-23 15:35 PM (UTC)** — A wget request was made from mts-web to IP `182[.]121[.]245[.]103` over port 46094, retrieving a shell script named `bin.sh`, stored at `/root/bin.sh`. A VirusTotal lookup returned 48 vendor detections, classifying the file under the **Mozi** malware family — a botnet capable of providing an attacker with remote control of an infected device. The file was granted execute permissions via chmod; however, no execution of the script was observed at the time of investigation based on available evidence. The file was not observed on any other device *(Figure 6)*.
 - **2025-12-23 15:38 PM (UTC)** — A `Set-Mailbox` rule was created with the action `DelivertoMailboxAndForward`, forwarding emails to the malicious address `Dawis19729[AT]nctime[.]com`, initiated from IP `185[.]98[.]171[.]249`. Shortly after, a mailbox rule named "zzzzzz" was created, configured to forward emails containing the keywords **passwords, password, sensitive, invoice, finance, and payroll** to the malicious address and move them to the "Deleted Items" folder. This constitutes a **Business Email Compromise (BEC)**.
 
 
@@ -106,3 +106,30 @@ The use of Proton VPN (IP addresses `185[.]98[.]171[.]249` and `185[.]98[.]171[.
   <img width="644" height="483" alt="image" src="https://github.com/user-attachments/assets/92772fbd-31bd-461c-b0c4-0b698d4c00d4" />
 </p>
 <p align="center"><b>Figure 1: WHOIS lookup for IP 185.98.171.250 confirming attribution to Proton VPN, Canada (Toronto), registered under ASN AS212238 CDNEXT Datacamp Limited.</b></p>
+
+<p align="center">
+<img width="782" height="346" alt="image" src="https://github.com/user-attachments/assets/8e7bfc1c-49cd-4353-b286-8030746b136c" />
+</p>
+<p align="center"><b>Figure 2: Successful RDP session onto Desktop-1 as soc-administrator from IP 185.98.171.250.</b></p>
+
+<p align="center">
+  <img width="629" height="703" alt="image" src="https://github.com/user-attachments/assets/f530b87e-e6b7-4a33-82bd-db1770777b35" />
+</p>
+<p align="center"><b>Figure 3: WHOIS lookup for IP 185.98.171.249 confirming attribution to Proton VPN, Canada (Toronto), registered under ASN AS212238 CDNEXT Datacamp Limited — the same subnet and provider as 185.98.171.250, corroborating single threat actor assessment.</b></p>
+
+
+<p align="center">
+  <img width="1327" height="561" alt="image" src="https://github.com/user-attachments/assets/479c3897-3d26-4e01-9829-227267e474e5" />
+</p>
+<p align="center"><b>Figure 4: VirusTotal analysis of bin.sh (SHA256: 4293c1d8574dc87c58360d6bac3daa182f64f7785c9d41da5e0741d2b1817fc7) flagged as malicious by 48/64 vendors, classified as trojan.mirai/mozi — a P2P IoT botnet capable of persistence via startup file modification and propagation through exploitation of IoT device vulnerabilities.</b></p>
+
+
+<p align="center">
+  <img width="1578" height="325" alt="image" src="https://github.com/user-attachments/assets/f55e1688-2725-48dc-874e-2c6c98b4dc38" />
+</p>
+<p align="center"><b>Figure 5: KQL query against DeviceLogonEvents confirming no successful logon activity was observed for the "newuser" account from the time of its creation (2025-12-23 15:28Z) to the time of investigation, corroborating that the account was created solely as a persistence mechanism and had not yet been utilised..</b></p>
+
+<p align="center">
+  <img width="1571" height="357" alt="image" src="https://github.com/user-attachments/assets/86927860-cc3b-4c77-b390-62688ee18cc4" />
+</p>
+<p align="center"><b>Figure 6: KQL query against DeviceProcessEvents confirming no execution of bin.sh was observed from the time of download (2025-12-23 15:28Z) to the time of investigation, indicating the malicious script was staged but not yet executed based on available evidence.</b></p>
