@@ -39,13 +39,21 @@
 
 ## Investigation Summary
 
-Who 
+On 2026-07-02, an external threat actor (IP 45[.]227[.]254[.]154) authenticated to the domain controller mts-dc.mts.local using already-compromised local administrator credentials - no brute-force activity preceded this, and the initial access vector could not be conclusively determined. The actor weakened the host's security configuration (enabling RDP, disabling NLA, enabling WDigest), performed network reconnaissance, and established two persistence mechanisms: a silently-installed AnyDesk service and a new "Guest" account with administrator rights.
+Approximately 19 hours later, the actor returned and escalated significantly - scanning the network with Advanced Port Scanner, then using Mimikatz to dump credentials from LSASS memory and the local SAM database. A second tool, checker (222).exe, was also executed and dropped a broader lateral-movement toolkit (Mimikatz, Invoke-TheHash, PsExec64, and related tools), retrieving files from external infrastructure in Germany and the US.
+A 90-day sweep found no evidence of these tools on any other device in the environment; however, only Mimikatz is confirmed to have actually executed - the additional lateral-movement tools were staged but not confirmed used. As of the time of writing, the source IP remains active and the persistence mechanisms have not been remediated. This should be treated as an active, unresolved risk.
+
+
+
+## 5W's
+
+### Who 
 	
 - The administrator account on mts-dc.mts.local. This account was used to authenticate via NTLM from the threat actor's IP (45[.]227[.]254[.]154) and was the context under which all subsequent malicious activity was carried out, including the registry modifications, discovery commands, AnyDesk installation, Advanced Port Scanner execution, Mimikatz credential dumping via dump.bat, and the execution of checker (222).exe. Based on DeviceLogonEvents for the preceding 90 days, there is no record of prior authentication attempts from this IP against the administrator account on any device in the mts domain, indicating the threat actor already possessed valid credentials prior to first contact. As the compromised account is a local administrator account on the domain controller rather than a mailbox-enabled user account, email-based phishing of this specific credential is unlikely to be the direct vector. The credential was more likely obtained through reuse of a previously leaked/exposed password
 	
 - A local account named Guest was created on mts-dc.mts.local and granted administrator rights at approximately 06:35 UTC on 2026-07-02 (Figure 7). No sign-in attempts using this account have been observed to date (Figure 8), indicating it was created as a persistence mechanism rather than used for active operations during this incident.
 
-What 
+### What 
 
 2026-07-02 06:33 [UTC] XDR had generated an Incident for Hands-on keyboard attack was launched from a compromised account (attack disruption). Prior to this a successful network logon via NTLM was made sourcing from 45[.]227[.]254[.]154 (remote device name - b_114) (Figure 1). Reviewing DeviceLogonEvents for the preceding 90 days, there is no record of prior authentication attempts - successful or failed - from 45[.]227[.]254[.]154 against the administrator account on any device of the mts domain. The first recorded event from this IP is the successful logon itself, indicating this was not preceded by a brute-force campaign against this account and this device, and is more consistent with the attacker already possessing valid credentials prior to first contact (e.g., obtained via phishing, credential reuse). AbuseIPDB has reported this IP Address with 100% confidence with the IP Address still being active till this day (figure 3).
 	
@@ -74,21 +82,21 @@ What
 
 
 
-When 
+### When 
 
 The intrusion began 2026-07-02 06:33 UTC with the initial NTLM logon from 45.227.254.154, and hands-on activity continued through 2026-07-03 (registry changes, AnyDesk install, Guest account creation, port scanning, and credential dumping via checker (222).exe/mimikatz). A follow-up hunting check on 2026-07-24 17:20 UTC found no renewed activity — only mimikatz.exe had run from the checker (222).exe directory between 2026-07-03 and 2026-07-23, and no IOCs were found on any other device in the prior 90 days. All times UTC. There is no evidence the activity is still ongoing at the time of investigation.
 
 
 
-Where 
+### Where 
 All confirmed malicious activity was limited to a single host, mts-dc.mts.local (192.168.10.8), the domain controller. The attacker connected remotely from external IP 45.227.254.154 (device name B_114, geolocated to Belize). A 90-day sweep of the rest of the environment found no related files, processes, or network IOCs on any other device (Figure 21), indicating the activity did not spread beyond the domain controller.
 
-Why 
+### Why 
 Telemetry shows the attacker authenticated directly with valid administrator credentials via NTLM, with no record of prior brute-force or failed logon attempts from this IP against this account - indicating the credentials were already compromised prior to first contact rather than obtained via brute force (Figure 2, Figure 3). The exact method by which the credentials were originally obtained could not be determined from the available telemetry.
 
 
 
-### Recomendations 
+## Recomendations 
 
 ### Immediate actions
 
@@ -120,9 +128,133 @@ Telemetry shows the attacker authenticated directly with valid administrator cre
 
 
 <p align="center">
-  
+  <img width="1128" height="774" alt="image" src="https://github.com/user-attachments/assets/401acaa9-df93-4b7d-a940-9ea5c08dc61d" />
 </p>
-<p align="center"><b>Figure 1: Initial NTLM logon and subsequent unlock events on mts-dc.mts.local from 45.227.254.154 (device b_114) as administrator</b></p>
+<p align="center"><b>Figure 2: 90-day logon history for the administrator account showing no prior activity from 45.227.254.154 before 2026-07-02</b></p>
+
+
+<p align="center">
+  <img width="1338" height="1119" alt="image" src="https://github.com/user-attachments/assets/cfdbaf2e-1b65-496a-b346-be574fdb4f20" />
+</p>
+<p align="center"><b>Figure 3: AbuseIPDB report for 45.227.254.154 – 100% abuse confidence, 3,968 reports</b></p>
+
+
+<p align="center">
+  <img width="2042" height="532" alt="image" src="https://github.com/user-attachments/assets/40280360-c18e-48ef-94fa-a3ea7c898653" />
+
+</p>
+<p align="center"><b>Figure 4: PowerShell/reg.exe commands weakening RDP security (disabling NLA, enabling WDigest, allowing RDP connections)</p>
+
+
+<p align="center">
+  <img width="1478" height="605" alt="image" src="https://github.com/user-attachments/assets/954b7da1-a685-4b91-878f-1b9ef4927eea" />
+</p>
+<p align="center"><b>Figure 5: Search for .ps1 files created around the registry-change window – only benign PSScriptPolicyTest artifacts found</b></p>
 
 
 
+<p align="center">
+  <img width="2528" height="835" alt="image" src="https://github.com/user-attachments/assets/e69ddb8a-003f-41ad-b415-fbc3401f5d4a" />
+</p>
+<p align="center"><b>Figure 6: VirusTotal scan of AnyDesk.exe – 0/72 vendors flagged malicious</b></p>
+
+
+<p align="center">
+  <img width="1811" height="1027" alt="image" src="https://github.com/user-attachments/assets/772115b8-3cad-4e2a-a7d1-dfaaf728c0cd" />
+</p>
+<p align="center"><b>Figure 7: net user/net localgroup commands creating the "Guest" account and adding it to Administrators</b></p>
+
+
+
+<p align="center">
+  <img width="1686" height="483" alt="image" src="https://github.com/user-attachments/assets/86bf491d-394f-4c9b-8424-f8df1303cd01" />
+</p>
+<p align="center"><b>Figure 8: Query for Guest account logons over the past 90 days – no sign-in attempts found</b></p>
+
+
+<p align="center">
+  <img width="2293" height="668" alt="image" src="https://github.com/user-attachments/assets/a0fe2fd0-928b-4a56-bce6-1cd98720029d" />
+</p>
+<p align="center"><b>Figure 9: Advanced_Port_Scanner_2.5.3869.exe extracted and executed by the administrator account</b></p>
+
+
+<p align="center">
+  <img width="2651" height="924" alt="image" src="https://github.com/user-attachments/assets/cf907c7c-dc9c-42a0-a6e2-885bf96bfd54" />
+</p>
+<p align="center"><b>Figure 10: VirusTotal scan of Advanced_Port_Scanner_2.5.3869.exe – 11/70 vendors flagged malicious</b></p>
+
+
+
+<p align="center">
+  <img width="889" height="929" alt="image" src="https://github.com/user-attachments/assets/2df34d35-ee67-4dda-8f54-5d05d59fa20b" />
+</p>
+<p align="center"><b>Figure 11: Advanced_Port_Scanner network connections to numerous internal/external IPs and ports (port sweep)
+</b></p>
+
+<p align="center">
+  <img width="802" height="605" alt="image" src="https://github.com/user-attachments/assets/da39de40-73e7-43c3-abd8-d71938701bba" />
+</p>
+<p align="center"><b>Figure 12: Distinct open ports discovered on mts-dc.mts.local (80, 3268, 3269, 3389, 5985)</b></p>
+
+<p align="center">
+  <img width="2257" height="268" alt="image" src="https://github.com/user-attachments/assets/77ae45c9-3a74-4d76-8cba-b612d44fb91f" />
+</p>
+<p align="center"><b>Figure 13: dump.bat launching 64.exe and 86.exe with Mimikatz-style credential dumping commands</b></p>
+
+
+<p align="center">
+  <img width="2589" height="938" alt="image" src="https://github.com/user-attachments/assets/3e555a2a-df46-4a8d-acd5-0a250c432b99" />
+</p>
+<p align="center"><b>Figure 14: VirusTotal scan of mimikatz.exe – 56/68 vendors flagged malicious</b></p>
+
+
+
+
+<p align="center">
+  <img width="2576" height="404" alt="image" src="https://github.com/user-attachments/assets/62e577a0-faa7-44f5-ba67-9421d69934c8" />
+</p>
+<p align="center"><b>Figure 15: VirusTotal scan of checker (222).exe – 58/71 vendors flagged malicious, linked to Mimikatz</b></p>
+
+
+<p align="center">
+  <img width="963" height="684" alt="image" src="https://github.com/user-attachments/assets/de20b5b9-11ec-4e5a-8aa2-1e055d405fd2" />
+</p>
+<p align="center"><b>Figure 16: VirusTotal "Dropped Files" relations for checker (222).exe – 30 related tools/DLLs historically dropped by this hash</b></p>
+
+
+<p align="center">
+  <img width="1599" height="949" alt="image" src="https://github.com/user-attachments/assets/b8e1c85d-52f4-47de-bb58-99d43561ff3d" />
+</p>
+<p align="center"><b>Figure 17: DeviceFileEvents – checker (222).exe's actual dropped files on mts-dc.mts.local (Mimikatz components, PsExec64.exe, api[1].ashx)</b></p>
+
+
+<p align="center">
+  <img width="2406" height="455" alt="image" src="https://github.com/user-attachments/assets/88a3668b-ad71-4d48-be9f-614568c85c54" />
+</p>
+<p align="center"><b>Figure 18: DeviceNetworkEvents – checker (222).exe's outbound connections to 45.147.48.158 (www[.]md5[.]in) and 104[.]143[.]2[.]195 (hashes[.]com)</b></p>
+
+
+
+<p align="center">
+  <img width="1370" height="877" alt="image" src="https://github.com/user-attachments/assets/290838d3-a651-4d00-ab42-baca329918ce" />
+</p>
+<p align="center"><b>Figure 19: AbuseIPDB report for 45.147.48.158 – no prior abuse reports (0% confidence)Figure 19: AbuseIPDB report for 45.147.48.158 – no prior abuse reports (0% confidence)</b></p>
+
+
+<p align="center">
+  <img width="2420" height="648" alt="image" src="https://github.com/user-attachments/assets/7c0a1cc4-7eb8-47a8-9da5-659d4a072d11" />
+</p>
+<p align="center"><b>Figure 20: Advanced hunting query – files executed from the checker (222).exe directory between 2026-07-03 and 2026-07-23 (only mimikatz.exe)</b></p>
+
+
+
+<p align="center">
+  <img width="1322" height="432" alt="image" src="https://github.com/user-attachments/assets/679b8de6-47cb-4d60-9705-d70a2b8d2503" />
+
+</p>
+<p align="center"><b>Figure 21: Advanced hunting query – IOC search across other devices over the past 90 days, no results found outside mts-dc.mts.local</b></p>
+
+
+## References
+
+[1] - https://www.acronis.com/en/tru/posts/makop-ransomware-guloader-and-privilege-escalation-in-attacks-against-indian-businesses/
