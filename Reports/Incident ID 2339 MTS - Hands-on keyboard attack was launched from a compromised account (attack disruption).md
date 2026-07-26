@@ -40,8 +40,10 @@
 ### Investigation Summary
 
 Who 
-	- 45[.]227[.]254[.]154 associated with device name B_114 was observed remoting onto mts-dc.mts.local (192.168.10.8) as administrator.
-	- An account named Guest was created by the threat actor, however at the time of investigation there were no observed logons. 
+	
+- The administrator account on mts-dc.mts.local. This account was used to authenticate via NTLM from the threat actor's IP (45[.]227[.]254[.]154) and was the context under which all subsequent malicious activity was carried out, including the registry modifications, discovery commands, AnyDesk installation, Advanced Port Scanner execution, Mimikatz credential dumping via dump.bat, and the execution of checker (222).exe. Based on DeviceLogonEvents for the preceding 90 days, there is no record of prior authentication attempts from this IP against the administrator account on any device in the mts domain, indicating the threat actor already possessed valid credentials prior to first contact. As the compromised account is a local administrator account on the domain controller rather than a mailbox-enabled user account, email-based phishing of this specific credential is unlikely to be the direct vector. The credential was more likely obtained through reuse of a previously leaked/exposed password
+	
+- A local account named Guest was created on mts-dc.mts.local and granted administrator rights at approximately 06:35 UTC on 2026-07-02 (Figure 7). No sign-in attempts using this account have been observed to date (Figure 8), indicating it was created as a persistence mechanism rather than used for active operations during this incident.
 
 What 
 
@@ -83,3 +85,27 @@ All confirmed malicious activity was limited to a single host, mts-dc.mts.local 
 
 Why 
 Telemetry shows the attacker authenticated directly with valid administrator credentials via NTLM, with no record of prior brute-force or failed logon attempts from this IP against this account - indicating the credentials were already compromised prior to first contact rather than obtained via brute force (Figure 2, Figure 3). The exact method by which the credentials were originally obtained could not be determined from the available telemetry.
+
+
+
+### Recomendations 
+
+### Immediate actions
+
+- Given mts-dc.mts.local's role as a domain controller, full network isolation may cause significant operational disruption if this is the sole or a critical DC in the environment. It is recommended to first confirm DC redundancy, then apply the most surgical containment feasible — such as blocking external/internet-facing access and the specific malicious IPs identified, or using EDR-based device containment — while prioritizing credential rotation and persistence removal as the immediate risk-reduction steps. Full isolation should be evaluated in coordination with IT leadership if a higher-severity ongoing threat is confirmed
+  
+- The threat actor enabled RDP (fDenyTSConnections = 0) and disabled NLA (UserAuthentication = 0) as part of their post-compromise activity, likely to establish a more convenient remote access channel for themselves going forward. It is recommended that RDP be disabled on mts-dc.mts.local unless explicitly required, and that NLA be enforced if RDP access is necessary.
+
+- Assume domain-wide credential compromise and rotate the krbtgt account password (twice, per Microsoft's guidance), given WDigest was enabled and a full LSASS dump occurred on a domain controller — any domain account with a cached session at the time of the dump should be considered exposed, not just the local admin account itself.
+
+- Identify and reset credentials for any accounts with active/cached sessions on mts-dc.mts.local at the time of the Mimikatz execution (2026-07-03 01:16 UTC), particularly any domain-privileged accounts.
+
+- Uninstall AnyDesk and remove its associated Windows service (HKLM\SYSTEM\ControlSet001\Services\AnyDesk); confirm whether AnyDesk is an approved/standard tool in this environment - if not, treat its presence as unauthorized remote access tooling and investigate how it was obtained.
+
+- Block the known malicious indicators at the firewall/proxy level: 45[.]227[.]254[.]154, 45[.]147[.]48[.]158, 104[.]143[.]2[.]195, and the associated domains (md5[.]in, hashes[.]com) is applicable.
+
+- Deploy LAPS (Local Administrator Password Solution) across the environment to ensure local administrator passwords are unique per machine and automatically rotated, reducing the impact of any future local credential exposure.
+
+- Hunt for delayed/second-wave lateral movement: the toolkit dropped by checker (222).exe (Invoke-TheHash, Invoke-SMBExec, Invoke-WMIExec, PsExec64) was staged but not confirmed executed. Continue monitoring for SMB/WMI-based authentication anomalies across the environment rather than treating the 90-day sweep as a final closure.
+
+- Continue monitoring source IP 45[.]227[.]254[.]154, as it remains active per AbuseIPDB as of 2026-07-22.
