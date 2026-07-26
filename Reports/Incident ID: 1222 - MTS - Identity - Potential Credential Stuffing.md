@@ -1,4 +1,4 @@
-# Incident ID: 1222 - MTS - Identity - Potential Credential Stuffing
+# Incident ID: 1222 MTS - Identity - Potential Credential Stuffing
 
 ## Findings
 
