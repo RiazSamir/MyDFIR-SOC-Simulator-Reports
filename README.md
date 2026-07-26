@@ -22,3 +22,7 @@ This repository contains structured investigation reports based on simulated sec
 [Incident ID 1838: MTS - Hands-on keyboard attack was launched from a compromised account (attack disruption)](https://github.com/RiazSamir/MyDFIR-SOC-Simulator-Reports/blob/main/Reports/Incident%20ID%201838%20MTS%20-%20Hands-on%20keyboard%20attack%20was%20launched%20from%20a%20compromised%20account%20(attack%20disruption).md)
 
 [Incident ID 2339: MTS - Hands-on keyboard attack was launched from a compromised account (attack disruption)](https://github.com/RiazSamir/MyDFIR-SOC-Simulator-Reports/blob/main/Reports/Incident%20ID%202339%20MTS%20-%20Hands-on%20keyboard%20attack%20was%20launched%20from%20a%20compromised%20account%20(attack%20disruption).md)
+
+[Incident ID 2375: MTS - Email - Authentication SPF/DKIM Fail](https://github.com/RiazSamir/MyDFIR-SOC-Simulator-Reports/blob/main/Reports/Incident%20ID:%202375%20MTS%20-%20Email%20-%20Authentication%20SPF%5CDKIM.md)
+
+
