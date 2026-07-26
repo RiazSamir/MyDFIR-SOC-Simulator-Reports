@@ -17,7 +17,8 @@ This repository contains structured investigation reports based on simulated sec
 
 [Incident ID: 959 MTS - Multi-stage incident involving Initial access & Command and control on multiple endpoints reported by multiple sources](https://github.com/RiazSamir/MyDFIR-SOC-Simulator-Reports/blob/main/Reports/Incident%20ID%3A%20959%20MTS%20-%20Multi-stage%20incident%20involving%20Initial%20access%20%26%20Command%20and%20control%20on%20multiple%20endpoints%20reported%20by%20multiple%20sources.md)
 
-[Incident ID: 1222 - MTS - Identity - Potential Credential Stuffing](https://github.com/RiazSamir/MyDFIR-SOC-Simulator-Reports/blob/main/Reports/Incident%20ID%3A%201222%20MTS%20-%20Identity%20-%20Potential%20Credential%20Stuffing.md)
+[Incident ID: 1222 MTS - Identity - Potential Credential Stuffing](https://github.com/RiazSamir/MyDFIR-SOC-Simulator-Reports/blob/main/Reports/Incident%20ID%3A%201222%20MTS%20-%20Identity%20-%20Potential%20Credential%20Stuffing.md)
 
-[ID 1838: MTS - Hands-on keyboard attack was launched from a compromised account (attack disruption)](https://github.com/RiazSamir/MyDFIR-SOC-Simulator-Reports/blob/main/Reports/Incident%20ID%201838%20MTS%20-%20Hands-on%20keyboard%20attack%20was%20launched%20from%20a%20compromised%20account%20(attack%20disruption).md)
+[Incident ID 1838: MTS - Hands-on keyboard attack was launched from a compromised account (attack disruption)](https://github.com/RiazSamir/MyDFIR-SOC-Simulator-Reports/blob/main/Reports/Incident%20ID%201838%20MTS%20-%20Hands-on%20keyboard%20attack%20was%20launched%20from%20a%20compromised%20account%20(attack%20disruption).md)
 
+[Incident ID 2339: MTS - Hands-on keyboard attack was launched from a compromised account (attack disruption)](https://github.com/RiazSamir/MyDFIR-SOC-Simulator-Reports/blob/main/Reports/Incident%20ID%202339%20MTS%20-%20Hands-on%20keyboard%20attack%20was%20launched%20from%20a%20compromised%20account%20(attack%20disruption).md)
