@@ -1,4 +1,4 @@
-# Incident ID 2339: Hands-on keyboard attack was launched from a compromised account (attack disruption)
+# Incident ID 2339 Hands-on keyboard attack was launched from a compromised account (attack disruption)
 
 ## Findings
 
