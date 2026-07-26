@@ -1,4 +1,4 @@
-# Incident ID: 959- MTS - Multi-stage incident involving Initial access & Command and control on multiple endpoints reported by multiple sources
+# Incident ID: 959 MTS - Multi-stage incident involving Initial access & Command and control on multiple endpoints reported by multiple sources
 
 ### IOC IP Addresses:
  
