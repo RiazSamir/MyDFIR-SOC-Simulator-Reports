@@ -37,7 +37,7 @@
 - HXXPS://www[.]md5[.]in
 - HXXPS://hashes[.]com
 
-### Investigation Summary
+## Investigation Summary
 
 Who 
 	
@@ -109,3 +109,20 @@ Telemetry shows the attacker authenticated directly with valid administrator cre
 - Hunt for delayed/second-wave lateral movement: the toolkit dropped by checker (222).exe (Invoke-TheHash, Invoke-SMBExec, Invoke-WMIExec, PsExec64) was staged but not confirmed executed. Continue monitoring for SMB/WMI-based authentication anomalies across the environment rather than treating the 90-day sweep as a final closure.
 
 - Continue monitoring source IP 45[.]227[.]254[.]154, as it remains active per AbuseIPDB as of 2026-07-22.
+
+
+## Screenshots
+
+<p align="center">
+  <img width="2180" height="594" alt="image" src="https://github.com/user-attachments/assets/d827b86a-f52a-430c-9f01-b6107a32555b" />
+</p>
+<p align="center"><b>Figure 1: Initial NTLM logon and subsequent unlock events on mts-dc.mts.local from 45.227.254.154 (device b_114) as administrator</b></p>
+
+
+<p align="center">
+  
+</p>
+<p align="center"><b>Figure 1: Initial NTLM logon and subsequent unlock events on mts-dc.mts.local from 45.227.254.154 (device b_114) as administrator</b></p>
+
+
+
