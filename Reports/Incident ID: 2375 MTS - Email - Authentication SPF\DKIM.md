@@ -22,7 +22,7 @@
 
 ## Investigation Summary
 
-On 2026-07-02, a phishing email spoofing "Canada Life" was sent to `Recipient A`, triggering an SPF/DKIM/DMARC authentication failure alert. Header analysis confirmed the email originated from emkei.cz, a free, publicly available fake mailer that allows anyone to forge the "From" address of an outgoing email without needing to compromise or control the domain being impersonated — in this case, rodolfomedrano.dev. All three authentication checks (SPF, DKIM, DMARC) failed, yet the email was still delivered to the recipient's inbox rather than being blocked or quarantined at the mail-flow stage.
+On 2026-07-02 [UTC], a phishing email spoofing "Canada Life" was sent to `Recipient A`, triggering an SPF/DKIM/DMARC authentication failure alert. Header analysis confirmed the email originated from emkei.cz, a free, publicly available fake mailer that allows anyone to forge the "From" address of an outgoing email without needing to compromise or control the domain being impersonated — in this case, rodolfomedrano.dev. All three authentication checks (SPF, DKIM, DMARC) failed, yet the email was still delivered to the recipient's inbox rather than being blocked or quarantined at the mail-flow stage.
 
 The email used a classic document-lure subject ("Your Document Is Ready & Available To Download") to entice the recipient to click an embedded link. Ryan Adams did click the link, which pointed to a phishing page hosted on Vercel (hxxps://policy-shared-doc1804471[.]vercel[.]app/) presenting a fake, password-protected Adobe Acrobat PDF viewer. However, Safe Links successfully blocked the click before the user reached the page, and no evidence of credential entry, payload execution, or further compromise was identified.
 
