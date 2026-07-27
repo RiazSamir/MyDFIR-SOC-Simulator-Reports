@@ -1,4 +1,4 @@
-# MyDFIR-SOC-Simulator-Reports
+# SOC-Simulator-Reports
 
 This repository contains structured investigation reports based on simulated security alerts from the MYDFIR SOC Simulator environment. The goal is to replicate real Security Operations Center (SOC) workflows by analyzing alerts in Microsoft Defender XDR and related telemetry sources, then producing professional incident reports.
 
